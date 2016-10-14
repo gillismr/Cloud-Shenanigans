@@ -1,7 +1,13 @@
 package root;
 
 import io.dropwizard.Application;
+import io.dropwizard.configuration.ConfigurationSourceProvider;
+import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import root.bundles.ResourceBundle;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MilesAndBradsFunService extends Application<MilesAndBradsFunServiceConfiguration> {
 
@@ -12,6 +18,18 @@ public class MilesAndBradsFunService extends Application<MilesAndBradsFunService
     }
 
     //Bundles!!!
+
+    private final ResourceBundle<MilesAndBradsFunServiceConfiguration> resourceBundle = new ResourceBundle<MilesAndBradsFunServiceConfiguration>() {
+    };
+
+    @Override
+    public void initialize(Bootstrap<MilesAndBradsFunServiceConfiguration> bootstrap){
+        super.initialize(bootstrap);
+
+        bootstrap.setConfigurationSourceProvider(s -> null);
+        bootstrap.addBundle(resourceBundle);
+
+    }
 
     public MilesAndBradsFunService() {
     }

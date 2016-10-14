@@ -17,5 +17,7 @@ public class HelloWorldResource {
     }
 
     @GET
-    public Optional<MessageDTO>
+    public Optional<MessageDTO> helloWorld(){
+        return Optional.of(new MessageDTO("Pepe was a good guy and your anime isn't trash.... also.... in case your still stuck on the issue... JET FUEL CAN NOT MELT STEEL BEAMS YA DINGUS"));
+    }
 }

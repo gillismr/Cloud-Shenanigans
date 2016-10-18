@@ -17,8 +17,6 @@ public class MilesAndBradsFunService extends Application<MilesAndBradsFunService
         new MilesAndBradsFunService().run(args);
     }
 
-    //Bundles!!!
-
     private final ResourceBundle<MilesAndBradsFunServiceConfiguration> resourceBundle = new ResourceBundle<MilesAndBradsFunServiceConfiguration>() {
     };
 
@@ -26,7 +24,7 @@ public class MilesAndBradsFunService extends Application<MilesAndBradsFunService
     public void initialize(Bootstrap<MilesAndBradsFunServiceConfiguration> bootstrap){
         super.initialize(bootstrap);
 
-        bootstrap.setConfigurationSourceProvider(s -> null);
+        bootstrap.setConfigurationSourceProvider(null);
         bootstrap.addBundle(resourceBundle);
 
     }

@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 public class MilesAndBradsFunService extends Application<MilesAndBradsFunServiceConfiguration> {
 
-    public static final String NAME = "miles-and-brads-fun-service";
+    public static final String NAME = "random-numbers";
 
     public static void main(String[] args) throws Exception {
         new MilesAndBradsFunService().run(args);
@@ -19,6 +19,11 @@ public class MilesAndBradsFunService extends Application<MilesAndBradsFunService
 
     private final ResourceBundle<MilesAndBradsFunServiceConfiguration> resourceBundle = new ResourceBundle<MilesAndBradsFunServiceConfiguration>() {
     };
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
     @Override
     public void initialize(Bootstrap<MilesAndBradsFunServiceConfiguration> bootstrap){

@@ -11,6 +11,7 @@ public class MilesAndBradsFunServiceConfiguration extends Configuration {
     @NotNull
     String someKindOfURL;
 
+    @JsonProperty
     public String getSomeKindOfURL() {
         return someKindOfURL;
     }

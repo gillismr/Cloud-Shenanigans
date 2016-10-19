@@ -24,7 +24,6 @@ public class MilesAndBradsFunService extends Application<MilesAndBradsFunService
     public void initialize(Bootstrap<MilesAndBradsFunServiceConfiguration> bootstrap){
         super.initialize(bootstrap);
 
-        bootstrap.setConfigurationSourceProvider(null);
         bootstrap.addBundle(resourceBundle);
 
     }

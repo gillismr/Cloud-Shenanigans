@@ -5,12 +5,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WowScraper {
 
-    private static final int PAGES_TO_CHECK = 10;
+    private static final int PAGES_TO_CHECK = 75;
     private static final String WP_BASE_URL = "https://www.wowprogress.com";
 
     public WowScraper() {
@@ -19,6 +24,7 @@ public class WowScraper {
     public void run() throws Exception {
         Connection connection;
         List<WowProgressCharacterBundle> candidates = new ArrayList<WowProgressCharacterBundle>();
+        List<String> candidateNamesFromFile = parseCandidateNamesFromFile();
         for (int i = 0; i < PAGES_TO_CHECK; i++) {
             connection = Jsoup.connect(String.format(WP_BASE_URL + "/mythic_plus_score/us/char_rating/next/%d/class.druid#char_rating", i))
                     .validateTLSCertificates(false)
@@ -36,7 +42,7 @@ public class WowScraper {
             int counter = 0;
             for (Element tableRow : tableRows) {
                 WowProgressCharacterBundle wpCharacterInfo = new WowProgressCharacterBundle(tableRow);
-                if (wpCharacterInfo.isNiermanCandidate()) {
+                if (wpCharacterInfo.isNiermanCandidate() && candidateNamesFromFile.contains(wpCharacterInfo.getCharacterName())) {
                     candidates.add(wpCharacterInfo);
                     counter++;
                 }
@@ -62,11 +68,11 @@ public class WowScraper {
             Element nameSubtitleElement = primaryElement.getElementsByClass("nav_block").get(0);
 
             Element realmLinkElement = nameSubtitleElement.child(0);
-            String wpRealmLink = WP_BASE_URL + realmLinkElement.attr("href");
+            String wpRealmLink = WP_BASE_URL + realmLinkElement.attr("href").replace("gearscore", "mythic_plus_score");
             secondPassCandidate.setWpRealmLink(wpRealmLink);
 
             Element guildLinkElement = nameSubtitleElement.child(1);
-            String wpGuildLink = (WP_BASE_URL + guildLinkElement.attr("href")).replace("gearscore", "mythic_plus_score");
+            String wpGuildLink = WP_BASE_URL + guildLinkElement.attr("href");
             String rawGuildString = guildLinkElement.attr("title");
             String trueGuildName = rawGuildString.substring(rawGuildString.indexOf('<') + 1, rawGuildString.indexOf('>'));
             String armoryGuildLink = getArmoryGuildLinkFromWp(wpGuildLink);
@@ -168,6 +174,25 @@ public class WowScraper {
         Element primaryElement = insideElement.getElementsByClass("primary").get(0);
         Element armoryLinkElement = primaryElement.getElementsByClass("armoryLink").get(0);
         return armoryLinkElement.attr("href");
+    }
+
+    private List<String> parseCandidateNamesFromFile() throws Exception {
+        InputStream fis = new FileInputStream("/Users/milesgillis/git/Cloud-Shenanigans/random-numbers/resources/his_name_is_here.txt");
+        InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+        BufferedReader br = new BufferedReader(isr);
+
+        List<String> candidateNames = new ArrayList<String>();
+        String line;
+        while ((line = br.readLine()) != null) {
+            if(line.startsWith("Candidate")){
+                String name = line.substring(line.indexOf(" ") +1 ).trim();
+                candidateNames.add(name);
+            }
+        }
+        fis.close();
+        isr.close();
+        br.close();
+        return candidateNames;
     }
 
     public void print(Object anything) {

@@ -162,6 +162,8 @@ public class WowScraper {
         print(acc + " third pass candidates found.");
 
 
+
+
     }
 
     private String getArmoryGuildLinkFromWp(String wpGuildLink) throws Exception {
